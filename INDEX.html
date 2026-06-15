@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SORTEOS LUIS ONTAMUCHA</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #1c1e21; }
+.container { max-width: 600px; margin: 0 auto; padding: 15px; }
+.card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+        h1 { text-align: center; color: #1877f2; margin-bottom: 10px; font-size: 28px; }
+        h2 { color: #1c1e21; margin-bottom: 12px; font-size: 20px; border-bottom: 2px solid #1877f2; padding-bottom: 5px; }
+.btn { background: #1877f2; color: white; border: none; padding: 14px 20px; border-radius: 8px; font-size: 16px; font-weight: 600; width: 100%; cursor: pointer; margin-top: 10px; }
+.btn-green { background: #42b72a; }
+.btn-gray { background: #6c757d; }
+.btn-orange { background: #fd7e14; }
+.btn:hover { opacity: 0.9; }
+.btn:disabled { background: #bcc0c4; cursor: not-allowed; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; margin: 8px 0; }
+        label { font-weight: 600; font-size: 14px; color: #606770; }
+.grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin: 15px 0; max-height: 400px; overflow-y: auto; }
+.num {
+         padding: 10px 5px;
+         text-align: center;
+         border-radius: 6px;
+         font-size: 12px;
+         font-weight: 600;
+         cursor: pointer;
+         user-select: none;
+         background: #f0f2f5;
+         color: #4b4f56;
+         border: 1px solid #dddfe2;
+     }
+.num:hover {
+         background: #e4e6eb;
+         border-color: #bcc0c4;
+     }
+.selected {
+         outline: 3px solid #000000;
+         background: #d6d8db!important;
+         color: #1c1e21!important;
+         border-color: #000000!important;
+     }
+.pago-box { background: #e7f3ff; border-left: 4px solid #1877f2; padding: 15px; border-radius: 8px; margin: 10px 0; }
+.comprobante { border: 2px dashed #1877f2; padding: 15px; text-align: left; background: #f8f9fa; }
+.hidden { display: none; }
+.stats { display: flex; justify-content: space-around; text-align: center; margin: 15px 0; }
+.stat-num { font-size: 24px; font-weight: 700; }
+.copy-btn { background: #e4e6eb; color: #050505; padding: 8px 12px; font-size: 14px; margin: 5px 0; }
+.lista-nums { background: #f0f2f5; padding: 10px; border-radius: 6px; margin: 10px 0; max-height: 120px; overflow-y: auto; font-size: 14px; }
+.total-box { background: #d4edda; border: 2px solid #28a745; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0; }
+.total-num { font-size: 32px; font-weight: 700; color: #155724; }
+.btn-group { display: flex; gap: 10px; margin: 10px 0; }
+.loading { text-align: center; padding: 20px; color: #606770; }
+.alerta { background: #fff3cd; border: 1px solid #ffc107; padding: 12px; border-radius: 6px; margin: 10px 0; font-size: 14px; color: #856404; }
+
+.bono-item { padding: 12px; margin: 8px 0; border-radius: 6px; border-left: 4px solid; }
+.bono-premio { font-weight: 700; font-size: 18px; }
+.bono-desc { font-size: 14px; margin-top: 4px; }
+
+     #bono1 { background: #d4edda; border-color: #28a745; }
+     #bono1.bono-premio { color: #155724; }
+     #bono1.bono-desc { color: #155724; }
+
+     #bono2 { background: #fff3cd; border-color: #fd7e14; }
+     #bono2.bono-premio { color: #8a4b00; }
+     #bono2.bono-desc { color: #8a4b00; }
+
+     #bono3 { background: #d1ecf1; border-color: #0d6efd; }
+     #bono3.bono-premio { color: #084298; }
+     #bono3.bono-desc { color: #084298; }
+
+.bono-activo { box-shadow: 0 0 0 3px rgba(40,167,69,0.3); }
+.check-bono { color: #28a745; font-weight: 700; }
+
+.timer-box { background: #f8d7da; border: 2px solid #dc3545; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0; }
+.timer-num { font-size: 36px; font-weight: 700; color: #721c24; font-family: monospace; }
+.timer-box.activo { background: #d4edda; border-color: #28a745; }
+.timer-box.activo.timer-num { color: #155724; }
+.bono-perdido { opacity: 0.5; text-decoration: line-through; }
+.suerte-control { display: flex; gap: 10px; align-items: center; margin: 15px 0; }
+.suerte-control input { width: 80px; margin: 0; }
+.admin-bar { text-align: center; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎟️ GANATE $25,000 🎟️</h1>
+
+        <div class="admin-bar">
+            <button class="btn btn-gray" style="width: auto; padding: 10px 20px;" onclick="abrirMenuPago()">🔑 Panel Admin</button>
+        </div>
+
+        <div class="card">
+            <h2>🏆 Premio Mayor</h2>
+            <p style="font-size: 24px; text-align: center; margin: 10px 0;"><strong>$25,000 MXN</strong></p>
+            <p><strong>Juega con:</strong> Lotería Nacional 21/Jun/2026</p>
+            <p><strong>Costo del boleto:</strong> $100 MXN </p>
+            <p style="font-size: 14px; color: #606770;">Cada boleto incluye dos números,al seccionar un número su compañero se selecciona automaticamente.       Ejemplo: 001+501 = $100 | 001+501 y 045+545 = $200</p>
+        </div>
+
+        <div class="card">
+            <h2>🎁 Bonos Disponibles</h2>
+            <div class="bono-item" id="bono1">
+                <div class="bono-premio">+$1,000 MXN</div>
+                <div class="bono-desc">Por pagar dentro de las primeras 2 horas después de apartar</div>
+            </div>
+            <div class="bono-item" id="bono2">
+                <div class="bono-premio">+$2,000 MXN</div>
+                <div class="bono-desc">Por comprar 3 parejas de números o más</div>
+            </div>
+            <div class="bono-item" id="bono3">
+                <div class="bono-premio">+$3,000 MXN ACUMULADO</div>
+                <div class="bono-desc">Si cumples los 2 bonos anteriores te llevas $3,000 extras</div>
+            </div>
+            <p style="font-size: 12px; color: #606770; margin-top: 10px;">*Los bonos se pagan junto con el premio si resultas ganador, premio máximo de $28,000</p>
+        </div>
+           <p style="font-size: 12px; text-align: center; color: #606770;">Da click a sobre los números grises o prueba tu suerte. Cada número incluye su compañero</p>
+
+        <div class="card">
+            <h2>📊 Números Disponibles</h2>
+            <div class="stats">
+                <div><div class="stat-num" style="color: #28a745;" id="libres">-</div>Disponibles</div>
+                <div><div class="stat-num" style="color: #606770;" id="total">500</div>Total</div>
+            </div>
+
+            <div id="alertaVacio" class="alerta hidden">
+                😔 Por el momento ya no hay números disponibles. Gracias por participar y recuerda que la suerte esta a tu lado.
+            </div>
+
+            <div class="suerte-control">
+                <label style="margin: 0;">¿Cuántas boletos quieres?</label>
+                <input type="number" id="cantSuerte" min="1" max="10" value="1">
+                <button class="btn btn-orange" style="margin: 0; width: auto; padding: 12px 20px;" onclick="pruebaTuSuerte()">🎲 Prueba tu suerte</button>
+            </div>
+
+            <p style="font-size: 12px; text-align: center; color: #606770;">Solo se muestran números disponibles. Da click para seleccionar</p>
+            <div id="loadingGrid" class="loading">Cargando números...</div>
+            <div class="grid" id="numerosGrid"></div>
+            <div class="btn-group">
+                <button class="btn btn-gray" onclick="limpiarSeleccion()">🗑️ Limpiar selección</button>
+                <button class="btn btn-gray" onclick="cargarNumeros()">🔄 Actualizar</button>
+            </div>
+        </div>
+
+        <div class="card" id="formCard">
+            <h2>✍️ Aparta tus números</h2>
+            <label>Números seleccionados:</label>
+            <div class="lista-nums" id="listaSeleccionados">Ninguno seleccionado aún</div>
+
+            <div class="total-box">
+                <div style="font-size: 14px; color: #155724;">TOTAL A PAGAR</div>
+                <div class="total-num">$<span id="totalPagar">0</span> MXN</div>
+                <div style="font-size: 12px; color: #606770;"><span id="cantParejas">0</span> parejas</div>
+                <div id="bonosAplican" style="font-size: 13px; color: #155724; margin-top: 8px; font-weight: 600;"></div>
+            </div>
+
+            <label>Tu nombre completo:</label>
+            <input type="text" id="nombre" placeholder="Juan Pérez">
+
+            <label>Tu WhatsApp:</label>
+            <input type="tel" id="telefono" placeholder="6421234567">
+
+            <label>Forma de pago:</label>
+            <select id="formaPago" onchange="mostrarPago()">
+                <option value="">Selecciona...</option>
+                <option value="transfer">Transferencia / Depósito</option>
+                <option value="efectivo">Pago en persona</option>
+            </select>
+
+            <div id="datosTransfer" class="pago-box hidden">
+                <h3>💳 Datos para transferir</h3>
+              <p><strong>Total:</strong> $<span class="totalMostrar">0</span> MXN</p>
+                <p><strong>Banco:</strong> MERCADO PAGO</p>
+                <p><strong>CLABE:</strong> <span id="clabe">722969014718064659</span></p>
+                <button class="btn copy-btn" onclick="copiar('clabe')">📋 Copiar CLABE</button>
+                <p><strong>Titular:</strong> LUIS ONTAMUCHA</p>
+                <div class="alerta" style="margin-top:10px;">
+                    ⏰ <strong>IMPORTANTE:</strong> Paga en las próximas 2 horas para ganar $1,000 extras si tu número sale premiado
+                </div>
+            </div>
+
+            <div id="datosEfectivo" class="pago-box hidden">
+                <h3>📍 Pago en persona</h3>
+                <p><strong>Total:</strong> $<span class="totalMostrar">0</span> MXN</p>
+                <p><strong>Dirección:</strong> Calle Matamoros #55, Bacame Nuevo</p>
+                <p><strong>Etchojoa, Sonora</strong></p>
+                <p><strong>Horario:</strong> Lunes a Domingo 8am - 11pm</p>
+                <p><strong>Referencia:</strong> Casa en esquina con diagonal frente a la ganadera</p>
+                <div class="alerta" style="margin-top:10px;">
+                    ⏰ <strong>IMPORTANTE:</strong> Paga en las próximas 2 horas para ganar $1,000 extras si tu número sale premiado
+                </div>
+            </div>
+
+            <button class="btn btn-green" id="btnApartar" onclick="apartarNumero()" disabled>Apartar Números</button>
+        </div>
+
+        <div class="card hidden" id="comprobanteCard">
+            <h2>✅ Números Apartados</h2>
+
+            <div class="timer-box activo" id="timerBox">
+                <div style="font-size: 14px; font-weight: 600;">TIEMPO PARA BONO DE PAGO RÁPIDO</div>
+                <div class="timer-num" id="timer">02:00:00</div>
+                <div style="font-size: 12px; margin-top: 5px;" id="timerMsg">Paga antes de que se acabe para ganar +$1,000</div>
+            </div>
+
+            <div class="comprobante" id="comprobanteData"></div>
+            <button class="btn" onclick="window.print()">🖨️ Imprimir Comprobante</button>
+            <button class="btn btn-green" id="btnWsp">📱 Mandar por WhatsApp</button>
+            <button class="btn copy-btn" onclick="location.reload()">Apartar más</button>
+        </div>
+    </div>
+
+<script>
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxYYd7fnnYgLIuNs9DsD5MW1dw5OAdmVFIlTOk2qO3TcJKgQowe_uYhAbAUj_ZMdXE/exec';
+
+const CONFIG = {
+    banco: "MERCADO PAGO",
+    clabe: "722969014718064659",
+    titular: "LUIS ONTAMUCHA",
+    direccion: "Calle Matamoros #55, Bacame Nuevo, Etchojoa, Sonora",
+    horario: "Lunes a Domingo 8am - 11pm",
+    whatsapp: "526422201688",
+    precio: 100,
+    bonoPagoRapido: 1000,
+    bonoVolumen: 2000,
+    bonoAcumulado: 3000,
+    minParejasVolumen: 3,
+    horasLimitePago: 2,
+    claveAdmin: 'doremifasol2'
+};
+
+let numeros = Array(501).fill(0);
+let seleccionados = [];
+let timerInterval = null;
+
+function cargarNumeros() {
+    document.getElementById('loadingGrid').style.display = 'block';
+    document.getElementById('numerosGrid').innerHTML = '';
+    document.getElementById('alertaVacio').classList.add('hidden');
+
+    const oldScript = document.getElementById('jsonpScript');
+    if(oldScript) oldScript.remove();
+
+    window.procesarNumeros = function(datos) {
+        try {
+            numeros = Array(501).fill(0);
+            datos.forEach(fila => {
+                if(fila[0] >= 1 && fila[0] <= 500) {
+                    numeros[fila[0]] = fila[1];
+                }
+            });
+
+            let libres = 0;
+            const grid = document.getElementById('numerosGrid');
+
+            for(let i = 1; i <= 500; i++) {
+                if(numeros[i] === 0) {
+                    const div = document.createElement('div');
+                    div.className = 'num';
+                    div.textContent = String(i).padStart(3,'0');
+                    div.dataset.num = i;
+                    div.onclick = () => toggleSeleccion(i);
+                    grid.appendChild(div);
+                    libres++;
+                }
+            }
+
+            document.getElementById('libres').textContent = libres;
+            document.getElementById('total').textContent = '500';
+            document.getElementById('loadingGrid').style.display = 'none';
+
+            if(libres === 0) {
+                document.getElementById('alertaVacio').classList.remove('hidden');
+                document.getElementById('formCard').classList.add('hidden');
+            }
+
+        } catch(e) {
+            console.error('Error procesando:', e);
+            document.getElementById('loadingGrid').innerHTML = `Error: ${e.message}`;
+        }
+    };
+
+    const script = document.createElement('script');
+    script.id = 'jsonpScript';
+    script.src = SHEET_URL + '?callback=procesarNumeros';
+    script.onerror = () => {
+        document.getElementById('loadingGrid').innerHTML = 'Error cargando. Revisa la URL del Sheet';
+    };
+    document.body.appendChild(script);
+}
+
+function toggleSeleccion(num) {
+    if(numeros[num]!== 0) return;
+    const idx = seleccionados.indexOf(num);
+    const div = document.querySelector(`[data-num="${num}"]`);
+
+    if(idx > -1) {
+        seleccionados.splice(idx, 1);
+        div.classList.remove('selected');
+    } else {
+        seleccionados.push(num);
+        div.classList.add('selected');
+    }
+    actualizarLista();
+}
+
+function limpiarSeleccion() {
+    seleccionados = [];
+    document.querySelectorAll('.num.selected').forEach(n => n.classList.remove('selected'));
+    actualizarLista();
+}
+
+function pruebaTuSuerte() {
+    const cantidad = parseInt(document.getElementById('cantSuerte').value) || 1;
+    const disponibles = [];
+
+    for(let i = 1; i <= 500; i++) {
+        if(numeros[i] === 0 &&!seleccionados.includes(i)) {
+            disponibles.push(i);
+        }
+    }
+
+    if(disponibles.length === 0) {
+        alert('Ya no hay números disponibles');
+        return;
+    }
+
+    if(cantidad > disponibles.length) {
+        alert(`Solo quedan ${disponibles.length} números disponibles`);
+        return;
+    }
+
+    limpiarSeleccion();
+
+    for(let i = 0; i < cantidad; i++) {
+        const randomIndex = Math.floor(Math.random() * disponibles.length);
+        const numRandom = disponibles.splice(randomIndex, 1)[0];
+        seleccionados.push(numRandom);
+        const div = document.querySelector(`[data-num="${numRandom}"]`);
+        if(div) div.classList.add('selected');
+    }
+
+    actualizarLista();
+    document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
+}
+
+function calcularBonos() {
+    const cantParejas = seleccionados.length;
+    const aplicaVolumen = cantParejas >= CONFIG.minParejasVolumen;
+
+    document.getElementById('bono2').classList.remove('bono-activo');
+    document.getElementById('bono3').classList.remove('bono-activo');
+
+    let textoBonos = '';
+
+    if(aplicaVolumen) {
+        document.getElementById('bono2').classList.add('bono-activo');
+        textoBonos += `<div class="check-bono">✓ Aplica bono de $${CONFIG.bonoVolumen} por volumen</div>`;
+        document.getElementById('bono3').classList.add('bono-activo');
+        textoBonos += `<div class="check-bono">✓ Puedes ganar $${CONFIG.bonoAcumulado} si pagas en ${CONFIG.horasLimitePago}hrs</div>`;
+    }
+
+    return {aplicaVolumen, textoBonos};
+}
+
+function actualizarLista() {
+    const lista = document.getElementById('listaSeleccionados');
+    const total = seleccionados.length * CONFIG.precio;
+    const {textoBonos} = calcularBonos();
+
+    if(seleccionados.length === 0) {
+        lista.textContent = 'Ninguno seleccionado aún';
+        document.getElementById('btnApartar').disabled = true;
+        document.getElementById('bonosAplican').innerHTML = '';
+    } else {
+        let texto = seleccionados.sort((a,b) => a-b).map(n => {
+            const compa = n + 500 === 1000? 0 : n + 500;
+            return `${String(n).padStart(3,'0')} + ${String(compa).padStart(3,'0')}`;
+        }).join('<br>');
+        lista.innerHTML = texto;
+        document.getElementById('btnApartar').disabled = false;
+        document.getElementById('bonosAplican').innerHTML = textoBonos;
+    }
+
+    document.getElementById('totalPagar').textContent = total;
+    document.getElementById('cantParejas').textContent = seleccionados.length;
+    document.querySelectorAll('.totalMostrar').forEach(el => el.textContent = total);
+}
+
+function mostrarPago() {
+    const forma = document.getElementById('formaPago').value;
+    document.getElementById('datosTransfer').classList.add('hidden');
+    document.getElementById('datosEfectivo').classList.add('hidden');
+    if(forma === 'transfer') document.getElementById('datosTransfer').classList.remove('hidden');
+    if(forma === 'efectivo') document.getElementById('datosEfectivo').classList.remove('hidden');
+}
+
+function iniciarTimer(limitePago) {
+    const timerEl = document.getElementById('timer');
+    const timerBox = document.getElementById('timerBox');
+    const timerMsg = document.getElementById('timerMsg');
+    const bono1 = document.getElementById('bono1');
+
+    if(timerInterval) clearInterval(timerInterval);
+
+    function actualizar() {
+        const ahora = new Date().getTime();
+        const limite = new Date(limitePago).getTime();
+        const diff = limite - ahora;
+
+        if(diff <= 0) {
+            timerEl.textContent = '00:00:00';
+            timerBox.classList.remove('activo');
+            timerMsg.textContent = '❌ Ya se venció el bono de pago rápido';
+            bono1.classList.add('bono-perdido');
+            clearInterval(timerInterval);
+            return;
+        }
+
+        const horas = Math.floor(diff / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const segs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        timerEl.textContent = `${String(horas).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(segs).padStart(2,'0')}`;
+    }
+
+    actualizar();
+    timerInterval = setInterval(actualizar, 1000);
+}
+
+async function apartarNumero() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const tel = document.getElementById('telefono').value.trim();
+    const forma = document.getElementById('formaPago').value;
+
+    if(seleccionados.length === 0) return alert('Selecciona al menos un número');
+    if(!nombre) return alert('Pon tu nombre');
+    if(!tel) return alert('Pon tu WhatsApp');
+    if(!forma) return alert('Selecciona forma de pago');
+
+    document.getElementById('btnApartar').disabled = true;
+    document.getElementById('btnApartar').textContent = 'Verificando...';
+
+    const horaApartado = new Date();
+    const limitePago = new Date(horaApartado.getTime() + CONFIG.horasLimitePago * 60 * 60 * 1000);
+    const {aplicaVolumen} = calcularBonos();
+
+    try {
+        const res = await fetch(SHEET_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                numeros: seleccionados,
+                nombre: nombre,
+                telefono: tel,
+                horaApartado: horaApartado.toISOString(),
+                limitePago: limitePago.toISOString(),
+                aplicaVolumen: aplicaVolumen
+            })
+        });
+
+        const data = await res.json();
+
+        if(data.error === 'ocupados') {
+            alert(data.mensaje + '\n\nActualizando números disponibles...');
+            limpiarSeleccion();
+            cargarNumeros();
+            document.getElementById('btnApartar').disabled = false;
+            document.getElementById('btnApartar').textContent = 'Apartar Números';
+            return;
+        }
+
+        if(data.error) {
+            alert('Error: ' + data.error);
+            document.getElementById('btnApartar').disabled = false;
+            document.getElementById('btnApartar').textContent = 'Apartar Números';
+            return;
+        }
+
+        const fecha = horaApartado.toLocaleString('es-MX');
+        const total = seleccionados.length * CONFIG.precio;
+
+        let listaNums = seleccionados.sort((a,b) => a-b).map(n => {
+            const compa = n + 500 === 1000? 0 : n + 500;
+            return `${String(n).padStart(3,'0')} y ${String(compa).padStart(3,'0')}`;
+        }).join('<br>');
+
+        let datosPago = forma === 'transfer'
+? `<strong>DEPÓSITO A:</strong><br>Banco: ${CONFIG.banco}<br>CLABE: ${CONFIG.clabe}<br>Titular: ${CONFIG.titular}`
+            : `<strong>PAGO EN PERSONA:</strong><br>${CONFIG.direccion}<br>Horario: ${CONFIG.horario}`;
+
+        let bonosTexto = `<p style="margin-top:10px;"><strong>Bonos aplicables si ganas:</strong></p>`;
+        bonosTexto += `<p>• Paga antes de ${limitePago.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'})} para ganar $${CONFIG.bonoPagoRapido} extras</p>`;
+        if(aplicaVolumen) {
+            bonosTexto += `<p>• Por comprar ${seleccionados.length} parejas ganas $${CONFIG.bonoVolumen} extras</p>`;
+            bonosTexto += `<p>• <strong>Si cumples ambos: $${CONFIG.bonoAcumulado} extras totales</strong></p>`;
+        }
+
+        document.getElementById('comprobanteData').innerHTML = `
+            <h3>COMPROBANTE DE RIFA</h3>
+            <p><strong>Números:</strong><br>${listaNums}</p>
+            <p><strong>Nombre:</strong> ${nombre}</p>
+            <p><strong>Total:</strong> $${total} MXN</p>
+            <p><strong>Apartado:</strong> ${fecha}</p>
+            <p><strong>Paga antes de:</strong> ${limitePago.toLocaleString('es-MX')} para bono de pago rápido</p>
+            ${bonosTexto}
+            <hr style="margin:10px 0;">
+            ${datosPago}
+        `;
+
+        document.getElementById('formCard').classList.add('hidden');
+        document.getElementById('comprobanteCard').classList.remove('hidden');
+
+        iniciarTimer(limitePago.toISOString());
+
+        const numsTexto = seleccionados.map(n => {
+            const compa = n + 500 === 1000? 0 : n + 500;
+            return `${String(n).padStart(3,'0')}+${String(compa).padStart(3,'0')}`;
+        }).join(', ');
+
+        const msg = `Hola! Aparté ${seleccionados.length} pareja(s): ${numsTexto}. Total: $${total} a nombre de ${nombre}. Pago: ${forma === 'transfer'? 'Transferencia' : 'En persona'}. Límite pago rápido: ${limitePago.toLocaleTimeString('es-MX')}`;
+        document.getElementById('btnWsp').onclick = () => window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`);
+
+        cargarNumeros();
+        window.scrollTo(0,0);
+    } catch(e) {
+        alert('Error al apartar. Intenta de nuevo');
+        document.getElementById('btnApartar').disabled = false;
+        document.getElementById('btnApartar').textContent = 'Apartar Números';
+    }
+}
+
+function copiar(id) {
+    navigator.clipboard.writeText(document.getElementById(id).textContent);
+    alert('Copiado ✅');
+}
+
+function abrirMenuPago() {
+    const clave = prompt('Clave de admin:');
+    if(clave!== CONFIG.claveAdmin) return alert('Clave incorrecta');
+
+    const numeros = prompt('Números a marcar como PAGADOS\nSeparados por coma. Ej: 5,23,145');
+    if(!numeros) return;
+
+    const numsArray = numeros.split(',').map(n => parseInt(n.trim())).filter(n => n >= 1 && n <= 500);
+    if(numsArray.length === 0) return alert('No pusiste números válidos');
+
+    const usarHoraActual = confirm('¿Usar hora actual?\nAceptar = Ahora\nCancelar = Poner hora manual');
+
+    let horaPago = null;
+    if(!usarHoraActual) {
+        const fecha = prompt('Fecha: DD/MM/YYYY\nEj: 15/06/2026');
+        const hora = prompt('Hora: HH:MM\nEj: 14:30');
+        if(!fecha ||!hora) return alert('Cancelado');
+
+        const [dia, mes, año] = fecha.split('/');
+        const [hor, min] = hora.split(':');
+        horaPago = new Date(año, mes-1, dia, hor, min).toISOString();
+    }
+
+    fetch(SHEET_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+            accion: 'marcarPagado',
+            numeros: numsArray,
+            horaPago: horaPago,
+            clave: clave
+        })
+    })
+   .then(r => r.json())
+   .then(res => {
+        if(res.error) alert('Error: ' + res.error);
+        else {
+            alert(`Marcados como PAGADOS: ${numsArray.join(', ')}\nHora: ${horaPago? new Date(horaPago).toLocaleString('es-MX') : 'Actual'}`);
+            cargarNumeros();
+        }
+    })
+   .catch(e => alert('Error de conexión'));
+}
+
+cargarNumeros();
+</script>
+</body>
+</html>
