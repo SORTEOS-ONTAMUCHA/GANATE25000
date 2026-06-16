@@ -67,6 +67,10 @@
      #bono2.bono-premio { color: #8a4b00; }
      #bono2.bono-desc { color: #8a4b00; }
 
+     #bono3 { background: #d1ecf1; border-color: #0d6efd; }
+     #bono3.bono-premio { color: #084298; }
+     #bono3.bono-desc { color: #084298; }
+
 .bono-activo { box-shadow: 0 0 0 3px rgba(40,167,69,0.3); }
 .check-bono { color: #28a745; font-weight: 700; }
 
@@ -121,6 +125,10 @@
             <div class="bono-item" id="bono2">
                 <div class="bono-premio">+$2,000 MXN</div>
                 <div class="bono-desc">Por comprar 3 parejas de números o más</div>
+            </div>
+            <div class="bono-item" id="bono3">
+                <div class="bono-premio">+$3,000 MXN ACUMULADO</div>
+                <div class="bono-desc">Si cumples los 2 bonos anteriores te llevas $3,000 extras</div>
             </div>
             <p style="font-size: 12px; color: #606770; margin-top: 10px;">*Los bonos se pagan junto con el premio si resultas ganador, premio máximo de $28,000</p>
         </div>
@@ -233,6 +241,7 @@ const CONFIG = {
     precio: 100,
     bonoPagoRapido: 1000,
     bonoVolumen: 2000,
+    bonoAcumulado: 3000,
     minParejasVolumen: 3,
     horasLimitePago: 2,
     claveAdmin: 'doremifasol2'
