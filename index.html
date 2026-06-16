@@ -81,7 +81,22 @@
 .bono-perdido { opacity: 0.5; text-decoration: line-through; }
 .suerte-control { display: flex; gap: 10px; align-items: center; margin: 15px 0; }
 .suerte-control input { width: 80px; margin: 0; }
-.admin-bar { text-align: center; margin-bottom: 15px; }
+.admin-bar {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 9999;
+}
+
+.admin-bar .btn {
+    background: transparent !important;
+    border: none !important;
+    font-size: 28px !important;
+    padding: 0 !important;
+    width: auto !important;
+    box-shadow: none !important;
+    cursor: pointer;
+}
     </style>
 </head>
 <body>
