@@ -67,10 +67,6 @@
      #bono2.bono-premio { color: #8a4b00; }
      #bono2.bono-desc { color: #8a4b00; }
 
-     #bono3 { background: #d1ecf1; border-color: #0d6efd; }
-     #bono3.bono-premio { color: #084298; }
-     #bono3.bono-desc { color: #084298; }
-
 .bono-activo { box-shadow: 0 0 0 3px rgba(40,167,69,0.3); }
 .check-bono { color: #28a745; font-weight: 700; }
 
@@ -88,14 +84,14 @@
     z-index: 9999;
 }
 
-.admin-bar .btn {
-    background: none !important;
+.admin-bar.btn {
+    background: none!important;
     background-color: transparent;
-    border: none !important;
-    font-size: 28px !important;
-    padding: 0 !important;
-    width: auto !important;
-    box-shadow: none !important;
+    border: none!important;
+    font-size: 28px!important;
+    padding: 0!important;
+    width: auto!important;
+    box-shadow: none!important;
     cursor: pointer;
 }
     </style>
@@ -113,7 +109,7 @@
             <p style="font-size: 24px; text-align: center; margin: 10px 0;"><strong>$25,000 MXN</strong></p>
             <p><strong>Juega con:</strong> Lotería Nacional 21/Jun/2026</p>
             <p><strong>Costo del boleto:</strong> $100 MXN </p>
-            <p style="font-size: 14px; color: #606770;">Cada boleto incluye dos números,al seccionar un número su compañero se selecciona automaticamente.       Ejemplo: 001+501 = $100 | 001+501 y 045+545 = $200</p>
+            <p style="font-size: 14px; color: #606770;">Cada boleto incluye dos números, al seleccionar un número su compañero se selecciona automaticamente. Ejemplo: 001+501 = $100 | 001+501 y 045+545 = $200</p>
         </div>
 
         <div class="card">
@@ -126,11 +122,7 @@
                 <div class="bono-premio">+$2,000 MXN</div>
                 <div class="bono-desc">Por comprar 3 parejas de números o más</div>
             </div>
-            <div class="bono-item" id="bono3">
-                <div class="bono-premio">+$3,000 MXN ACUMULADO</div>
-                <div class="bono-desc">Si cumples los 2 bonos anteriores te llevas $3,000 extras</div>
-            </div>
-            <p style="font-size: 12px; color: #606770; margin-top: 10px;">*Los bonos se pagan junto con el premio si resultas ganador, premio máximo de $28,000</p>
+            <p style="font-size: 12px; color: #606770; margin-top: 10px;">*Los bonos se pagan junto con el premio si resultas ganador. Máximo $3,000 en bonos</p>
         </div>
            <p style="font-size: 12px; text-align: center; color: #606770;">Da click a sobre los números grises o prueba tu suerte. Cada número incluye su compañero</p>
 
@@ -241,7 +233,6 @@ const CONFIG = {
     precio: 100,
     bonoPagoRapido: 1000,
     bonoVolumen: 2000,
-    bonoAcumulado: 3000,
     minParejasVolumen: 3,
     horasLimitePago: 2,
     claveAdmin: 'doremifasol2'
@@ -367,15 +358,12 @@ function calcularBonos() {
     const aplicaVolumen = cantParejas >= CONFIG.minParejasVolumen;
 
     document.getElementById('bono2').classList.remove('bono-activo');
-    document.getElementById('bono3').classList.remove('bono-activo');
 
     let textoBonos = '';
 
     if(aplicaVolumen) {
         document.getElementById('bono2').classList.add('bono-activo');
         textoBonos += `<div class="check-bono">✓ Aplica bono de $${CONFIG.bonoVolumen} por volumen</div>`;
-        document.getElementById('bono3').classList.add('bono-activo');
-        textoBonos += `<div class="check-bono">✓ Puedes ganar $${CONFIG.bonoAcumulado} si pagas en ${CONFIG.horasLimitePago}hrs</div>`;
     }
 
     return {aplicaVolumen, textoBonos};
@@ -510,7 +498,6 @@ async function apartarNumero() {
         bonosTexto += `<p>• Paga antes de ${limitePago.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'})} para ganar $${CONFIG.bonoPagoRapido} extras</p>`;
         if(aplicaVolumen) {
             bonosTexto += `<p>• Por comprar ${seleccionados.length} parejas ganas $${CONFIG.bonoVolumen} extras</p>`;
-            bonosTexto += `<p>• <strong>Si cumples ambos: $${CONFIG.bonoAcumulado} extras totales</strong></p>`;
         }
 
         document.getElementById('comprobanteData').innerHTML = `
@@ -584,15 +571,15 @@ function abrirMenuPago() {
             clave: clave
         })
     })
-   .then(r => r.json())
-   .then(res => {
+  .then(r => r.json())
+  .then(res => {
         if(res.error) alert('Error: ' + res.error);
         else {
             alert(`Marcados como PAGADOS: ${numsArray.join(', ')}\nHora: ${horaPago? new Date(horaPago).toLocaleString('es-MX') : 'Actual'}`);
             cargarNumeros();
         }
     })
-   .catch(e => alert('Error de conexión'));
+  .catch(e => alert('Error de conexión'));
 }
 
 cargarNumeros();
